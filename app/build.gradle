@@ -59,3 +59,24 @@ sceneform.asset('sampledata/models/igloo.obj',
         'default',
         'sampledata/models/igloo.sfa',
         'src/main/assets/igloo')
+
+
+sceneform.asset('sampledata/models/Teapot.obj',
+        'default',
+        'sampledata/models/Teapot.sfa',
+        'src/main/assets/teapot')
+
+sceneform.asset('sampledata/models/Coffee Cup_final.obj',
+        'default',
+        'sampledata/models/Coffee Cup_final.sfa',
+        'src/main/assets/coffeecup')
+
+sceneform.asset('sampledata/models/Wine_Glass.obj',
+        'default',
+        'sampledata/models/Wine_Glass.sfa',
+        'src/main/assets/wineglass')
+
+sceneform.asset('sampledata/models/ExpressoPot_231.obj',
+        'default',
+        'sampledata/models/ExpressoPot_231.sfa',
+        'src/main/assets/expresso')

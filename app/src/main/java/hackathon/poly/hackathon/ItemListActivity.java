@@ -9,10 +9,12 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import hackathon.poly.hackathon.dummy.DummyContent;
@@ -35,6 +37,30 @@ public class ItemListActivity extends AppCompatActivity {
      * device.
      */
     private boolean mTwoPane;
+
+    private String textMug = Html.fromHtml("Vendu par : Amazon.com <br> Dishwasher safe, microwave safe. Feeling crafty, Can draw on the mug with an oil based Sharpie paint-pen and Preheat your oven to 350 degrees. Once your oven is heated, set your mugs inside and let them “bake” for 30 minutes. After 30 minutes, turn off the oven,  let the mugs and oven cool down and now you have for Graduation, Birthday, Holidays, Anniversary and much more").toString();
+
+    private String textCup =  Html.fromHtml("Vendu par : Amazon.com <br>" +
+            "8-ounce paper hot cup; includes 20 sleeves of 50 cups (1,000 cups total) <br>" +
+            "Polyethylene lining for resistance to leaking and moisture penetration <br>" +
+            "Hot insulated—comfortable to hold and keeps hot beverages hot for longer<br>" +
+            "Ideal for to-go orders, cafes, food trucks, and other types of hot-beverage service").toString();
+
+    private String textWineGlass = Html.fromHtml("Vendu par : Amazon.ca <br>" +
+            "ELEGANCE: Enrich your drinking experience with this tastefully designed 13.25-ounce wine glass set. Essential piece for your sophisticated barware. Ideal for any table setting from casual dinners to fun parties <br>" +
+            "HIGH QUALITY: Thick and durable quality material will add convenience to your life. This special set of 6 stemware is perfect for a Cabernet, Chardonnay or any glass of your favorite wine <br>" +
+            "PERFECT FOR GIFTING: Ideal for birthday gifts, corporate gifts, father’s day gifts, mother’s day gifts you name it! Tastefully packaged to meet your needs <br>" +
+            "GET CREATIVE: Try serving unique cocktails, spritzers or even delicious desserts. These barware glasses will fit your collection perfectly. Use your imagination to its limits <br>" +
+            "DISHWASHER SAFE: Tired of dealing with hand-wash items? This set of wine glasses can be easily washed in the dishwasher")
+            .toString();
+
+    private String textTeapot = Html.fromHtml("Vendu par : Martin Newell<br>" +
+            "Imported <br>" +
+            "Whistles attached to kettle to signal that water is boiling <br>" +
+            "Kettle heats up quickly and retains heat well<br>" +
+            "Classic stainless steel design to fit any kitchen<br>" +
+            "Hand wash with mild soap<br>" +
+            "Limited lifetime warranty").toString();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,10 +99,10 @@ public class ItemListActivity extends AppCompatActivity {
     }
 
     private void setupRecyclerView(@NonNull RecyclerView recyclerView) {
-        if (MainActivity.nImage1 > 0) DummyContent.ITEMS.add(new DummyContent.DummyItem("0", MainActivity.nImage1, MainActivity.priceImage1,"content 1", "details 1"));
-        if (MainActivity.nImage2 > 0) DummyContent.ITEMS.add(new DummyContent.DummyItem(String.valueOf(DummyContent.ITEMS.size()), MainActivity.nImage2, MainActivity.priceImage2,"content 2", "details 2"));
-        if (MainActivity.nImage3 > 0) DummyContent.ITEMS.add(new DummyContent.DummyItem(String.valueOf(DummyContent.ITEMS.size()), MainActivity.nImage3, MainActivity.priceImage3, "content 3", "details 3"));
-        if (MainActivity.nImage4 > 0) DummyContent.ITEMS.add(new DummyContent.DummyItem(String.valueOf(DummyContent.ITEMS.size()), MainActivity.nImage4, MainActivity.priceImage4, "content 4", "details 4"));
+        if (MainActivity.nImage1 > 0) DummyContent.ITEMS.add(new DummyContent.DummyItem("0", MainActivity.nImage1, MainActivity.priceImage1,"mug                ", textMug));
+        if (MainActivity.nImage2 > 0) DummyContent.ITEMS.add(new DummyContent.DummyItem(String.valueOf(DummyContent.ITEMS.size()), MainActivity.nImage2, MainActivity.priceImage2,"cup of coffee", textCup));
+        if (MainActivity.nImage3 > 0) DummyContent.ITEMS.add(new DummyContent.DummyItem(String.valueOf(DummyContent.ITEMS.size()), MainActivity.nImage3, MainActivity.priceImage3, "teapot            ", textTeapot));
+        if (MainActivity.nImage4 > 0) DummyContent.ITEMS.add(new DummyContent.DummyItem(String.valueOf(DummyContent.ITEMS.size()), MainActivity.nImage4, MainActivity.priceImage4, "wine glass    ", textWineGlass));
         recyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(this, DummyContent.ITEMS, mTwoPane));
     }
 
@@ -141,26 +167,29 @@ public class ItemListActivity extends AppCompatActivity {
             final TextView mIdView;
             final TextView mContentView;
             final TextView mPriceView;
-            final Button btn;
+            final ImageButton btn;
             ViewHolder(View view) {
                 super(view);
                 mIdView = (TextView) view.findViewById(R.id.id_text);
                 mContentView = (TextView) view.findViewById(R.id.content);
                 mPriceView = (TextView) view.findViewById((R.id.id_price));
-                btn = (Button) view.findViewById(R.id.btnRemove);
+                btn = (ImageButton) view.findViewById(R.id.btnRemove);
                 View.OnClickListener mOnClickListener = new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         Integer value = Integer.parseInt(mIdView.getText().toString());
                         value = value - 1;
                        mIdView.setText(value.toString());
+                       Object aSupprimer = null;
                        for (DummyContent.DummyItem item : DummyContent.ITEMS) {
                            if (item.content.equals(mContentView.getText().toString())) {
                                if (--item.number == 0) {
-
-                                  // Invalid
+                                   aSupprimer = item;
                                }
                            }
+                       }
+                       if (aSupprimer != null) {
+                           DummyContent.ITEMS.remove(aSupprimer);
                        }
                     }
                 };

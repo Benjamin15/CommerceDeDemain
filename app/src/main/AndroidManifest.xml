@@ -42,7 +42,7 @@
         </activity>
         <activity
             android:name=".ItemListActivity"
-            android:label="@string/title_item_list"
+            android:label="Your cart"
             android:theme="@style/AppTheme.NoActionBar"></activity>
         <activity
             android:name=".ItemDetailActivity"

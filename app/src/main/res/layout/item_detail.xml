@@ -7,4 +7,7 @@
     android:layout_height="match_parent"
     android:padding="16dp"
     android:textIsSelectable="true"
-    tools:context=".ItemDetailFragment" />
+    tools:context=".ItemDetailFragment"
+    android:maxLines="30"
+    android:lines="5"
+    android:singleLine="false"/>

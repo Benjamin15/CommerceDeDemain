@@ -26,5 +26,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/sceneform_fragment"
         app:layout_constraintVertical_chainStyle="spread"
+        android:background="#008fbd"
         app:layout_constraintVertical_weight="1"/>
 </android.support.constraint.ConstraintLayout>

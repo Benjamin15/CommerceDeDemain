@@ -2,24 +2,15 @@ package hackathon.poly.hackathon;
 
 import android.app.AlertDialog;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
-import android.os.Handler;
-import android.os.HandlerThread;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.PixelCopy;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 
 import com.google.ar.core.Anchor;
 import com.google.ar.core.Frame;
@@ -28,18 +19,11 @@ import com.google.ar.core.Plane;
 import com.google.ar.core.Trackable;
 import com.google.ar.core.TrackingState;
 import com.google.ar.sceneform.AnchorNode;
-import com.google.ar.sceneform.ArSceneView;
 import com.google.ar.sceneform.rendering.ModelRenderable;
 import com.google.ar.sceneform.rendering.Renderable;
 import com.google.ar.sceneform.ux.ArFragment;
 import com.google.ar.sceneform.ux.TransformableNode;
 
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
@@ -167,34 +151,37 @@ public class MainActivity extends AppCompatActivity {
         LinearLayout gallery = findViewById(R.id.gallery_layout);
 
         ImageView andy = new ImageView(this);
-        andy.setImageResource(R.drawable.droid_thumb);
+        andy.setImageResource(R.drawable.cupofcoffee);
         andy.setContentDescription("andy");
-        andy.setOnClickListener(view ->{addObject(Uri.parse("andy.sfb")); nImage1++; andy.setTooltipText("X " + nImage1.toString()); });
+        andy.setOnClickListener(view ->{addObject(Uri.parse("coffeecup.sfb")); nImage1++; andy.setTooltipText("X " + nImage1.toString()); });
         andy.setTooltipText(nImage1.toString());
+        andy.setPadding(40, 0, 0 , 0 );
         gallery.addView(andy);
 
         ImageView cabin = new ImageView(this);
-        cabin.setImageResource(R.drawable.cabin_thumb);
+        cabin.setImageResource(R.drawable.expressocoffee);
         cabin.setContentDescription("cabin");
-        cabin.setOnClickListener(view ->{addObject(Uri.parse("Cabin.sfb")); nImage2++; cabin.setTooltipText("X " + nImage2.toString()); });
+        cabin.setOnClickListener(view ->{addObject(Uri.parse("expresso.sfb")); nImage2++; cabin.setTooltipText("X " + nImage2.toString()); });
         cabin.setTooltipText(nImage2.toString());
-
+        cabin.setPadding(40, 0, 0 , 0 );
         gallery.addView(cabin);
 
         ImageView house = new ImageView(this);
-        house.setImageResource(R.drawable.house_thumb);
+        house.setImageResource(R.drawable.teapot);
         house.setContentDescription("house");
-        house.setOnClickListener(view ->{addObject(Uri.parse("House.sfb")); nImage3++; house.setTooltipText("X " + nImage3.toString());
-        });
+        house.setOnClickListener(view ->{addObject(Uri.parse("teapot.sfb")); nImage3++; house.setTooltipText("X " + nImage3.toString()); });
         house.setTooltipText(nImage3.toString());
+        house.setPadding(40, 0, 0 , 0 );
 
         gallery.addView(house);
 
         ImageView igloo = new ImageView(this);
-        igloo.setImageResource(R.drawable.igloo_thumb);
+        igloo.setImageResource(R.drawable.winglass);
         igloo.setContentDescription("igloo");
-        igloo.setOnClickListener(view ->{addObject(Uri.parse("igloo.sfb")); nImage4++; igloo.setTooltipText("X " + nImage4.toString()); });
+        igloo.setOnClickListener(view ->{addObject(Uri.parse("wineglass.sfb")); nImage4++; igloo.setTooltipText("X " + nImage4.toString()); });
         igloo.setTooltipText(nImage4.toString());
+        igloo.setPadding(40, 0, 0 , 0 );
+
         gallery.addView(igloo);
 
 
@@ -203,6 +190,7 @@ public class MainActivity extends AppCompatActivity {
         btnBuy.setContentDescription("Buy");
         btnBuy.setOnClickListener(view ->{ if ((nImage1 | nImage2 | nImage3 |nImage4) > 0) {Intent intent = new Intent(this, ItemListActivity.class); startActivity(intent); }});
         btnBuy.setTooltipText("Buy");
+        btnBuy.setPadding(20, 40, 0 , 0 );
         gallery.addView(btnBuy);
     }
 
