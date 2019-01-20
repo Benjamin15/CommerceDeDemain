@@ -66,7 +66,7 @@ public class ItemDetailFragment extends Fragment {
             System.getProperty("line.separator");
 
             ((TextView) rootView.findViewById(R.id.item_detail)).setText(mItem.details);
-            ((TextView) rootView.findViewById(R.id.item_detail)).setTextSize(12);
+            ((TextView) rootView.findViewById(R.id.item_detail)).setTextSize(16);
         }
 
         return rootView;

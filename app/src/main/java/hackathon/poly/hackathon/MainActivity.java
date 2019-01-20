@@ -39,10 +39,10 @@ public class MainActivity extends AppCompatActivity {
     public static Integer nImage2 = 0;
     public static Integer nImage3 = 0;
     public static Integer nImage4 = 0;
-    public static Integer priceImage1 = 100;
-    public static Integer priceImage2 = 125;
-    public static Integer priceImage3 = 150;
-    public static Integer priceImage4 = 175;
+    public static Integer priceImage1 = 14;
+    public static Integer priceImage2 = 18;
+    public static Integer priceImage3 = 50;
+    public static Integer priceImage4 = 20;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

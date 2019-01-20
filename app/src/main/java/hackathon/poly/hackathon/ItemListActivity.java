@@ -17,10 +17,13 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import org.w3c.dom.Text;
+
 import hackathon.poly.hackathon.dummy.DummyContent;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * An activity representing a list of Items. This activity
@@ -40,7 +43,7 @@ public class ItemListActivity extends AppCompatActivity {
 
     private String textMug = Html.fromHtml("Vendu par : Amazon.com <br> Dishwasher safe, microwave safe. Feeling crafty, Can draw on the mug with an oil based Sharpie paint-pen and Preheat your oven to 350 degrees. Once your oven is heated, set your mugs inside and let them “bake” for 30 minutes. After 30 minutes, turn off the oven,  let the mugs and oven cool down and now you have for Graduation, Birthday, Holidays, Anniversary and much more").toString();
 
-    private String textCup =  Html.fromHtml("Vendu par : Amazon.com <br>" +
+    private String textCup = Html.fromHtml("Vendu par : Amazon.com <br>" +
             "8-ounce paper hot cup; includes 20 sleeves of 50 cups (1,000 cups total) <br>" +
             "Polyethylene lining for resistance to leaking and moisture penetration <br>" +
             "Hot insulated—comfortable to hold and keeps hot beverages hot for longer<br>" +
@@ -79,9 +82,19 @@ public class ItemListActivity extends AppCompatActivity {
                 for (DummyContent.DummyItem item : DummyContent.ITEMS) {
                     somme += item.number * item.price;
                 }
-                if (DummyContent.ITEMS.size() > 0)
+                if (DummyContent.ITEMS.size() > 0 && somme > 0) {
                     Snackbar.make(view, "Congratulation, you have by for " + somme + "$CA", Snackbar.LENGTH_LONG)
                             .setAction("Action", null).show();
+                    new java.util.Timer().schedule(
+                            new java.util.TimerTask() {
+                                @Override
+                                public void run() {
+                                    ItemListActivity.this.finish();
+                                }
+                            },
+                            2000
+                    );
+                }
             }
         });
 
@@ -99,19 +112,23 @@ public class ItemListActivity extends AppCompatActivity {
     }
 
     private void setupRecyclerView(@NonNull RecyclerView recyclerView) {
-        if (MainActivity.nImage1 > 0) DummyContent.ITEMS.add(new DummyContent.DummyItem("0", MainActivity.nImage1, MainActivity.priceImage1,"mug                ", textMug));
-        if (MainActivity.nImage2 > 0) DummyContent.ITEMS.add(new DummyContent.DummyItem(String.valueOf(DummyContent.ITEMS.size()), MainActivity.nImage2, MainActivity.priceImage2,"cup of coffee", textCup));
-        if (MainActivity.nImage3 > 0) DummyContent.ITEMS.add(new DummyContent.DummyItem(String.valueOf(DummyContent.ITEMS.size()), MainActivity.nImage3, MainActivity.priceImage3, "teapot            ", textTeapot));
-        if (MainActivity.nImage4 > 0) DummyContent.ITEMS.add(new DummyContent.DummyItem(String.valueOf(DummyContent.ITEMS.size()), MainActivity.nImage4, MainActivity.priceImage4, "wine glass    ", textWineGlass));
+        if (MainActivity.nImage1 > 0)
+            DummyContent.ITEMS.add(new DummyContent.DummyItem("0", MainActivity.nImage1, MainActivity.priceImage1, "mug                ", textMug));
+        if (MainActivity.nImage2 > 0)
+            DummyContent.ITEMS.add(new DummyContent.DummyItem(String.valueOf(DummyContent.ITEMS.size()), MainActivity.nImage2, MainActivity.priceImage2, "cup of coffee", textCup));
+        if (MainActivity.nImage3 > 0)
+            DummyContent.ITEMS.add(new DummyContent.DummyItem(String.valueOf(DummyContent.ITEMS.size()), MainActivity.nImage3, MainActivity.priceImage3, "teapot            ", textTeapot));
+        if (MainActivity.nImage4 > 0)
+            DummyContent.ITEMS.add(new DummyContent.DummyItem(String.valueOf(DummyContent.ITEMS.size()), MainActivity.nImage4, MainActivity.priceImage4, "wine glass    ", textWineGlass));
         recyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(this, DummyContent.ITEMS, mTwoPane));
     }
 
     public static class SimpleItemRecyclerViewAdapter
-            extends RecyclerView.Adapter<SimpleItemRecyclerViewAdapter.ViewHolder> {
+            extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
         private final ItemListActivity mParentActivity;
-        private final List<DummyContent.DummyItem> mValues;
         private final boolean mTwoPane;
+        private TextView result;
         private final View.OnClickListener mOnClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -137,63 +154,148 @@ public class ItemListActivity extends AppCompatActivity {
         SimpleItemRecyclerViewAdapter(ItemListActivity parent,
                                       List<DummyContent.DummyItem> items,
                                       boolean twoPane) {
-            mValues = items;
             mParentActivity = parent;
             mTwoPane = twoPane;
         }
 
         @Override
-        public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        public int getItemViewType(int position) {
+            if (isPositionHeader(position))
+                return 0;
+            if (isPositionFooter(position))
+                return 2;
+            return 1;
+        }
+
+        private boolean isPositionHeader(int position) {
+            return position == 0;
+        }
+
+        private boolean isPositionFooter(int position) {
+            return position == DummyContent.ITEMS.size() + 1;
+        }
+        @Override
+        public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             View view = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.item_list_content, parent, false);
+            if (viewType == 2) {
+                System.out.println("footer créé");
+                return new FooterViewHolder(view);
+            }
+            if (viewType == 0)
+                return new HeaderViewHolder(view);
             return new ViewHolder(view);
         }
 
         @Override
-        public void onBindViewHolder(final ViewHolder holder, int position) {
-            holder.mIdView.setText(mValues.get(position).number.toString());
-            holder.mContentView.setText(mValues.get(position).content);
-            holder.mPriceView.setText(mValues.get(position).price.toString() + "$CA");
-            holder.itemView.setTag(mValues.get(position));
-            holder.itemView.setOnClickListener(mOnClickListener);
+        public void onBindViewHolder(@NonNull RecyclerView.ViewHolder viewHolder, int i) {
+            if (viewHolder instanceof HeaderViewHolder) {
+                ((HeaderViewHolder)viewHolder).mIdView.setText("Number");
+                ((HeaderViewHolder)viewHolder).mContentView.setText("Article");
+                ((HeaderViewHolder)viewHolder).mPriceView.setText("Price");
+            } else if (viewHolder instanceof FooterViewHolder) {
+                ((FooterViewHolder)viewHolder).mIdView.setText("Total");
+                Integer sum = 0;
+                for (DummyContent.DummyItem item : DummyContent.ITEMS){
+                    sum += item.number * item.price;
+                }
+                result = ((FooterViewHolder)viewHolder).mPriceView;
+                result.setText("   "  + sum.toString() + " $CA TTC");
+            } else if (viewHolder instanceof ViewHolder) {
+                ((ViewHolder)viewHolder).mIdView.setText(DummyContent.ITEMS.get(i-1).number.toString());
+                ((ViewHolder)viewHolder).mContentView.setText(DummyContent.ITEMS.get(i-1).content);
+                ((ViewHolder)viewHolder).mPriceView.setText("          " + DummyContent.ITEMS.get(i-1).price.toString() + "$CA");
+                viewHolder.itemView.setTag(DummyContent.ITEMS.get(i-1));
+                viewHolder.itemView.setOnClickListener(mOnClickListener);
+            }
         }
 
         @Override
         public int getItemCount() {
-            return mValues.size();
+            return DummyContent.ITEMS.size() + 2;
         }
 
-        class ViewHolder extends RecyclerView.ViewHolder {
+        private class FooterViewHolder extends RecyclerView.ViewHolder {
             final TextView mIdView;
             final TextView mContentView;
             final TextView mPriceView;
             final ImageButton btn;
-            ViewHolder(View view) {
+
+            public FooterViewHolder(View view) {
                 super(view);
                 mIdView = (TextView) view.findViewById(R.id.id_text);
                 mContentView = (TextView) view.findViewById(R.id.content);
                 mPriceView = (TextView) view.findViewById((R.id.id_price));
                 btn = (ImageButton) view.findViewById(R.id.btnRemove);
+                btn.setVisibility(View.GONE);
+            }
+        }
+
+        private class HeaderViewHolder extends RecyclerView.ViewHolder {
+            final TextView mIdView;
+            final TextView mContentView;
+            final TextView mPriceView;
+            final ImageButton btn;
+
+            public HeaderViewHolder(View view) {
+                super(view);
+                mIdView = (TextView) view.findViewById(R.id.id_text);
+                mContentView = (TextView) view.findViewById(R.id.content);
+                mPriceView = (TextView) view.findViewById((R.id.id_price));
+                btn = (ImageButton) view.findViewById(R.id.btnRemove);
+                btn.setVisibility(View.GONE);
+
+            }
+        }
+
+
+        public class ViewHolder extends RecyclerView.ViewHolder {
+            final TextView mIdView;
+            final TextView mContentView;
+            final TextView mPriceView;
+            final ImageButton btn;
+
+            ViewHolder(View Sview) {
+                super(Sview);
+                mIdView = (TextView) Sview.findViewById(R.id.id_text);
+                mContentView = (TextView) Sview.findViewById(R.id.content);
+                mPriceView = (TextView) Sview.findViewById((R.id.id_price));
+                btn = (ImageButton) Sview.findViewById(R.id.btnRemove);
                 View.OnClickListener mOnClickListener = new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        Integer value = Integer.parseInt(mIdView.getText().toString());
-                        value = value - 1;
-                       mIdView.setText(value.toString());
-                       Object aSupprimer = null;
-                       for (DummyContent.DummyItem item : DummyContent.ITEMS) {
-                           if (item.content.equals(mContentView.getText().toString())) {
-                               if (--item.number == 0) {
-                                   aSupprimer = item;
-                               }
-                           }
-                       }
-                       if (aSupprimer != null) {
-                           DummyContent.ITEMS.remove(aSupprimer);
-                       }
+                        DummyContent.DummyItem aSupprimer = null;
+                        for (DummyContent.DummyItem item : DummyContent.ITEMS) {
+                            if (item.content.equals(mContentView.getText().toString())) {
+                                if (item.number <= 0) {
+                                    System.out.println("supprime : " + item.content);
+                                    aSupprimer = item;
+                                } else {
+                                    System.out.println("item value : " + --item.number);
+                                    mIdView.setText(item.number.toString());
+
+                                }
+                            }
+                        }
+                       /* if (aSupprimer != null) {
+                            System.out.println("vrai suppression ! " + aSupprimer.content);
+                            DummyContent.ITEMS.remove(aSupprimer);
+                            Sview.invalidate();
+
+                            for (DummyContent.DummyItem item : DummyContent.ITEMS)
+                                System.out.println(item.content);
+                        }*/
+                        if (result != null)
+                        {
+                            Integer sum = 0;
+                            for (DummyContent.DummyItem item :  DummyContent.ITEMS){
+                                sum += item.number * item.price;
+                            }result.setText(sum + " $CA");
+
+                        }
                     }
                 };
-                btn.setOnClickListener(mOnClickListener);
+                    btn.setOnClickListener(mOnClickListener);
             }
         }
     }
